@@ -1,35 +1,69 @@
-//进入mysql数据库
-mysql -u root -p
+>1.初始化
 
+```
+npm install
+npm run start
+```
 
+>2.连接数据库
 
+```javascript
+var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '1234',
+  database: 'MAXDB'
+})
+connection.connect()
+```
 
-//创建表格 max_tbl
- CREATE TABLE max_tbl(
-   id INT NOT NULL AUTO_INCREMENT,
-   title VARCHAR(100) NOT NULL,
-   author VARCHAR(40) NOT NULL,
-   date DATE,
-   PRIMARY KEY ( id )
-   )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+>3.git/post样例
 
-//向max_tbl表中插入数据
-INSERT INTO max_tbl 
-(title, author, date)
-VALUES
-("max_tbl的第一条数据", "马爱鑫", NOW());
+```javascript
+let queryData = (req, res) => {
+    var sql = `select * from user`;
+    var sqlarr = [1];
+    var callback = (err, data)=>{
+        if (err){
+         console.log(err)
+        }else{
+          res.send({
+              'list': data
+          })
+        }
+    }
+    // return SySqlConnect(sql, sqlarr);
+    connection.query(sql, callback)
+}
 
-INSERT INTO max_tbl 
-(title, author, date)
-VALUES
-("max_tbl的第二条数据", "马爱鑫", NOW())
+let deleteUser = (req, res) => {
+  let {id} = req.body;
+  var sql = `delete from user where id=?`
+  var sqlarr = [id]
+  var callback = (err, data)=>{
+    if (err){
+      console.log(err)
+    }else{
+      res.send({
+        'code': 200,
+        'msg': '删除用户信息成功'
+      })
+    }
+  }
+  connection.query(sql, sqlarr, callback)
+}
 
+router.get('/queryData', userService.queryData)
+router.post('/deleteUser', userService.deleteUser)
+```
 
-//查询数据
-
-select * from max_tbl;
-
-
-//mysql 版本8 过高 导致node无法连接数据库
-Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client
-Solution：ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';
+>4.客户端实现
+```javascript
+ axios.post('http://192.168.31.133:8080/user/deleteUser', postData)
+      .then((response)=>{
+          this.queryData();
+          this.$Message.info(response.data.msg);
+      }).catch((error)=>{
+          console.log(error);
+      })
+    ```

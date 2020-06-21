@@ -58,6 +58,7 @@ router.post('/deleteUser', userService.deleteUser)
 ```
 
 >4.客户端实现
+
 ```javascript
  axios.post('http://192.168.31.133:8080/user/deleteUser', postData)
       .then((response)=>{
@@ -66,4 +67,4 @@ router.post('/deleteUser', userService.deleteUser)
       }).catch((error)=>{
           console.log(error);
       })
-    ```
+```

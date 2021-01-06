@@ -13,7 +13,7 @@
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "view-design": "^4.0.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "xlsx": "^0.13.3"
   },
   "devDependencies": {
